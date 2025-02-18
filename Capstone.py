@@ -5,8 +5,8 @@ pelajaran_list = [
 ]
 
 siswa_list = [
-    {"id": 1, "nama": "Ali", "nilais": []},
-    {"id": 2, "nama": "Budi", "nilais": []},
+    {"id": 1, "nama": "Ali", "nilais": [{"pelajaranId": "MTK", "nilai": 90}]},
+    {"id": 2, "nama": "Budi", "nilais": [{"pelajaranId": "MTK", "nilai": 85}, {"pelajaranId": "BHS", "nilai": 95}]},
     {"id": 3, "nama": "Citra", "nilais": []},
 ]
 
@@ -124,9 +124,22 @@ def perbarui_pelajaran(id_pelajaran, nama_baru):
 
 # DELETE: Menghapus pelajaran
 def hapus_pelajaran(id_pelajaran):
-    global pelajaran_list
-    pelajaran_list = [p for p in pelajaran_list if p["id"] != id_pelajaran]
-    print("Pelajaran berhasil dihapus!")
+    global pelajaran_list  # Gunakan variabel global untuk memperbarui daftar pelajaran
+    try:
+        # Cek apakah ID pelajaran ada dalam daftar
+        pelajaran_ditemukan = any(p["id"] == id_pelajaran for p in pelajaran_list)
+        
+        if not pelajaran_ditemukan:
+            raise ValueError("ID pelajaran tidak ditemukan!")
+
+        # Hapus pelajaran dari daftar jika ditemukan
+        pelajaran_list = [p for p in pelajaran_list if p["id"] != id_pelajaran]
+        print("Pelajaran berhasil dihapus!")
+    
+    except ValueError as e:
+        print(f"Error: {e}")
+    except Exception as e:
+        print(f"Terjadi kesalahan: {e}")
 
 
 # Menu utama
