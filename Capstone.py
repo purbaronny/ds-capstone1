@@ -1,3 +1,5 @@
+from tabulate import tabulate
+
 pelajaran_list = [
     {"id": "BHS", "nama": "Bahasa Indonesia"},
     {"id": "MTK", "nama": "Matematika"},
@@ -43,9 +45,29 @@ def tambah_pelajaran_siswa(id_siswa, pelajaranId, nilai):
         print(f"Terjadi kesalahan: {e}")
 
 # READ: Menampilkan semua data siswa
+# READ: Menampilkan semua siswa beserta pelajaran yang mereka ambil
+# READ: Menampilkan semua siswa beserta pelajaran yang mereka ambil dalam bentuk tabel
 def tampilkan_siswa():
+    if not siswa_list:
+        print("Tidak ada siswa yang terdaftar.")
+        return
+    
+    # Menyiapkan data siswa dan pelajaran
+    tabel_data = []
+    
     for siswa in siswa_list:
-        print(siswa)
+        # Ambil nama pelajaran berdasarkan ID pelajaran
+        if siswa["nilais"]:
+            for nilai in siswa["nilais"]:
+                pelajaran = next((p["nama"] for p in pelajaran_list if p["id"] == nilai["pelajaranId"]), "Pelajaran Tidak Ditemukan")
+                tabel_data.append([siswa["id"], siswa["nama"], pelajaran, nilai["nilai"]])
+        else:
+            tabel_data.append([siswa["id"], siswa["nama"], "Belum ada pelajaran", ""])
+
+    # Menampilkan tabel dengan tabulate
+    headers = ["ID Siswa", "Nama Siswa", "Pelajaran", "Nilai"]
+    print(tabulate(tabel_data, headers=headers, tablefmt="grid"))
+
 
 # UPDATE: Memperbarui nilai siswa dalam pelajaran tertentu
 def perbarui_nilai(id_siswa, pelajaranId, nilai_baru):
@@ -109,9 +131,16 @@ def tambah_pelajaran(id_pelajaran, nama_pelajaran):
 
 # READ: Menampilkan semua pelajaran
 def tampilkan_pelajaran():
-    print("\n=== Daftar Pelajaran ===")
-    for pelajaran in pelajaran_list:
-        print(f"ID: {pelajaran['id']}, Nama: {pelajaran['nama']}")
+    if not pelajaran_list:
+        print("Tidak ada pelajaran yang tersedia.")
+        return
+
+    # Konversi data ke format tabel
+    headers = ["ID Pelajaran", "Nama Pelajaran"]
+    table_data = [[p["id"], p["nama"]] for p in pelajaran_list]
+    
+    # Cetak tabel dengan gaya grid
+    print(tabulate(table_data, headers=headers, tablefmt="grid"))
 
 # UPDATE: Memperbarui nama pelajaran
 def perbarui_pelajaran(id_pelajaran, nama_baru):
